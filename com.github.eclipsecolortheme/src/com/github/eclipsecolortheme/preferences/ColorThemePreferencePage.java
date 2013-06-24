@@ -16,6 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -97,9 +98,11 @@ public class ColorThemePreferencePage extends PreferencePage
         themeDetails.setLayout(themeDetailsLayout);
         gridData = new GridData(GridData.FILL_BOTH);
         gridData.heightHint = 306;
-        browser = new Browser(themeDetails, SWT.BORDER);
-        browser.setLayoutData(gridData);
-        browser.setText("<html><body></body></html>");
+        
+        if ( getBrowser() != null ) {
+        	getBrowser().setLayoutData(gridData);
+        	getBrowser().setText("<html><body></body></html>");
+        }
         authorLabel = new Label(themeDetails, SWT.NONE);
         GridDataFactory.swtDefaults().grab(true, false).applyTo(authorLabel);
         websiteLink = new Link(themeDetails, SWT.NONE);
@@ -125,6 +128,24 @@ public class ColorThemePreferencePage extends PreferencePage
         return container;
 	}
 
+	private Browser getBrowser() {
+		if (browser != null)
+			return browser;
+
+        try {
+        	browser = new Browser(themeDetails, SWT.BORDER | SWT.NO_SCROLL);
+        } catch ( SWTError e ) {
+        	try {
+        		browser = new Browser(themeDetails, SWT.BORDER|SWT.WEBKIT);
+        	} catch ( SWTError e1 ) {
+        		e.printStackTrace();
+        		e1.printStackTrace();
+        	}
+        }
+        
+        return browser;
+	}
+	
     private void fillThemeSelectionList() {
         Set<ColorTheme> themes = colorThemeManager.getThemes();
         java.util.List<String> themeNames = new LinkedList<String>();
@@ -161,7 +182,8 @@ public class ColorThemePreferencePage extends PreferencePage
                 websiteLink.setVisible(true);
             }
             String id = theme.getId();
-            browser.setUrl(
+            if ( getBrowser() != null )
+            	getBrowser().setUrl(
                     "http://www.eclipsecolorthemes.org/static/themes/java/"
                     + id + ".html");
             themeDetails.setVisible(true);
