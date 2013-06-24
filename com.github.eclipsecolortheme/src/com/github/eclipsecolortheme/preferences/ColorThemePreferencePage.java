@@ -68,12 +68,11 @@ public class ColorThemePreferencePage extends PreferencePage
 	@Override
 	protected Control createContents(Composite parent) {
 	    container = new Composite(parent, SWT.NONE);
-	    GridData gridData = new GridData();
 	    GridLayout containerLayout = new GridLayout(1, true);
 	    containerLayout.marginWidth = 0;
         container.setLayout(containerLayout);
 
-        gridData = new GridData(GridData.FILL_BOTH);
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         themeSelection = new Composite(container, SWT.NONE);
         GridLayout themeSelectionLayout = new GridLayout(2, false);
         themeSelectionLayout.marginWidth = 0;
@@ -81,13 +80,15 @@ public class ColorThemePreferencePage extends PreferencePage
         themeSelection.setLayout(themeSelectionLayout);
         themeSelection.setLayoutData(gridData);
         
-        gridData = new GridData(GridData.FILL_VERTICAL);
+        gridData = new GridData(SWT.FILL, SWT.FILL, false, true);
         gridData.minimumWidth = 120;
+        gridData.heightHint = 100; // This convinces the scrollable to check it's height
+        gridData.verticalSpan = 3;
         themeSelectionList = new List(themeSelection, SWT.BORDER | SWT.V_SCROLL);
         themeSelectionList.setLayoutData(gridData);
         fillThemeSelectionList();
 
-        gridData = new GridData(GridData.FILL_BOTH);
+        gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.widthHint = 400;
         gridData.verticalAlignment = SWT.TOP;
         GridLayout themeDetailsLayout = new GridLayout(1, true);
@@ -96,7 +97,8 @@ public class ColorThemePreferencePage extends PreferencePage
         themeDetails = new Composite(themeSelection, SWT.NONE);
         themeDetails.setLayoutData(gridData);
         themeDetails.setLayout(themeDetailsLayout);
-        gridData = new GridData(GridData.FILL_BOTH);
+        
+        gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.heightHint = 306;
         
         if ( getBrowser() != null ) {
