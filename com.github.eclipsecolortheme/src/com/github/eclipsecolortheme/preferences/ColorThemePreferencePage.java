@@ -125,10 +125,14 @@ public class ColorThemePreferencePage extends PreferencePage
         themeSelectionList.setSelection(new String[] {activeThemeName});
         updateDetails(colorThemeManager.getTheme(activeThemeName));
 
-        Link ectLink = new Link(container, SWT.NONE);
+        Link ectLink = new Link(themeSelection, SWT.WRAP);
+        gridData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
         ectLink.setText("Download more themes or create your own on "
                         + "<a>eclipsecolorthemes.org</a>.");
         setLinkTarget(ectLink, "http://eclipsecolorthemes.org");
+        gridData.widthHint = 300;
+        ectLink.setLayoutData(gridData);
+
         return container;
 	}
 
