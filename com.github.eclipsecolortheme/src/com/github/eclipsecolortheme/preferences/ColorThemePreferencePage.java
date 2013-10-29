@@ -47,7 +47,7 @@ import com.github.eclipsecolortheme.ColorThemeManager;
 /** The preference page for managing color themes. */
 public class ColorThemePreferencePage extends PreferencePage
                                       implements IWorkbenchPreferencePage {
-    private ColorThemeManager colorThemeManager = new ColorThemeManager();
+    private ColorThemeManager colorThemeManager = null;
     private Composite container;
     private List themeSelectionList;
     private Composite themeSelection;
@@ -59,10 +59,12 @@ public class ColorThemePreferencePage extends PreferencePage
 
     /** Creates a new color theme preference page. */
     public ColorThemePreferencePage() {
-        setPreferenceStore(Activator.getDefault().getPreferenceStore());
     }
 
     public void init(IWorkbench workbench) {
+        setPreferenceStore(Activator.getDefault().getPreferenceStore());
+        setDescription("Setup preferences for Eclipse Color Themes");
+        colorThemeManager = new ColorThemeManager();
     }
 
     @Override
