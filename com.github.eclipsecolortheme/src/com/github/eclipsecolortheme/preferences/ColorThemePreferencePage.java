@@ -47,7 +47,7 @@ import com.github.eclipsecolortheme.ColorThemeManager;
 /** The preference page for managing color themes. */
 public class ColorThemePreferencePage extends PreferencePage
                                       implements IWorkbenchPreferencePage {
-    private ColorThemeManager colorThemeManager = new ColorThemeManager();
+    private ColorThemeManager colorThemeManager = null;
     private Composite container;
     private List themeSelectionList;
     private Composite themeSelection;
@@ -59,21 +59,22 @@ public class ColorThemePreferencePage extends PreferencePage
 
     /** Creates a new color theme preference page. */
     public ColorThemePreferencePage() {
-        setPreferenceStore(Activator.getDefault().getPreferenceStore());
     }
 
     public void init(IWorkbench workbench) {
+        setPreferenceStore(Activator.getDefault().getPreferenceStore());
+        setDescription("Setup preferences for Eclipse Color Themes");
+        colorThemeManager = new ColorThemeManager();
     }
 
     @Override
     protected Control createContents(Composite parent) {
         container = new Composite(parent, SWT.NONE);
-        GridData gridData = new GridData();
         GridLayout containerLayout = new GridLayout(1, true);
         containerLayout.marginWidth = 0;
         container.setLayout(containerLayout);
 
-        gridData = new GridData(GridData.FILL_BOTH);
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         themeSelection = new Composite(container, SWT.NONE);
         GridLayout themeSelectionLayout = new GridLayout(2, false);
         themeSelectionLayout.marginWidth = 0;
@@ -81,13 +82,13 @@ public class ColorThemePreferencePage extends PreferencePage
         themeSelection.setLayout(themeSelectionLayout);
         themeSelection.setLayoutData(gridData);
         
-        gridData = new GridData(GridData.FILL_VERTICAL);
+        gridData = new GridData(SWT.FILL, SWT.FILL, false, true);
         gridData.minimumWidth = 120;
         themeSelectionList = new List(themeSelection, SWT.BORDER | SWT.V_SCROLL);
         themeSelectionList.setLayoutData(gridData);
         fillThemeSelectionList();
 
-        gridData = new GridData(GridData.FILL_BOTH);
+        gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.widthHint = 400;
         gridData.verticalAlignment = SWT.TOP;
         GridLayout themeDetailsLayout = new GridLayout(1, true);
@@ -96,7 +97,7 @@ public class ColorThemePreferencePage extends PreferencePage
         themeDetails = new Composite(themeSelection, SWT.NONE);
         themeDetails.setLayoutData(gridData);
         themeDetails.setLayout(themeDetailsLayout);
-        gridData = new GridData(GridData.FILL_BOTH);
+        gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.heightHint = 306;
         if (getBrowser() != null) {
             getBrowser().setLayoutData(gridData);
@@ -120,10 +121,13 @@ public class ColorThemePreferencePage extends PreferencePage
         themeSelectionList.setSelection(new String[] {activeThemeName});
         updateDetails(colorThemeManager.getTheme(activeThemeName));
 
-        Link ectLink = new Link(container, SWT.NONE);
+        Link ectLink = new Link(themeSelection, SWT.WRAP);
+        gridData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
         ectLink.setText("Download more themes or create your own on "
                         + "<a>eclipsecolorthemes.org</a>.");
         setLinkTarget(ectLink, "http://eclipsecolorthemes.org");
+        gridData.widthHint = 300;
+        ectLink.setLayoutData(gridData);
 
         forceDefaultBG = new Button(container, SWT.CHECK);
         forceDefaultBG.setText("Set all background colors to the default");
